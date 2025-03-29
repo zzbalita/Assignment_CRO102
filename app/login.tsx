@@ -30,7 +30,7 @@ export default function Login() {
       }
 
       Alert.alert('Thành công', 'Đăng nhập thành công!');
-      router.replace('/tabs/home'); // Điều hướng sau khi đăng nhập
+      router.replace('/tabs/home'); 
     } catch (error: any) {
       console.log(error);
       setError('Email hoặc mật khẩu không đúng!');
