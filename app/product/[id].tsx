@@ -1,14 +1,14 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, collection, addDoc } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
 
 const ProductDetail = () => {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const [product, setProduct] = useState<any>(null);
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -22,6 +22,25 @@ const ProductDetail = () => {
     };
     fetchProduct();
   }, [id]);
+
+  const addToCart = async () => {
+    if (quantity <= 0) {
+      Alert.alert("Thông báo", "Vui lòng chọn số lượng hợp lệ!");
+      return;
+    }
+
+    const db = getFirestore();
+    await addDoc(collection(db, "cart"), {
+      productId: id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      quantity: quantity,
+    });
+
+    Alert.alert("Thành công", "Sản phẩm đã được thêm vào giỏ hàng!");
+    router.replace("/tabs/home"); // Chuyển về màn hình home
+  };
 
   if (!product) return <Text>Loading...</Text>;
 
@@ -37,7 +56,7 @@ const ProductDetail = () => {
       <Text style={{ color: "gray" }}>{product.description}</Text>
       
       <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 20 }}>
-        <TouchableOpacity onPress={() => setQuantity(Math.max(0, quantity - 1))} style={{ padding: 10, backgroundColor: "#ddd", borderRadius: 5 }}>
+        <TouchableOpacity onPress={() => setQuantity(Math.max(1, quantity - 1))} style={{ padding: 10, backgroundColor: "#ddd", borderRadius: 5 }}>
           <Text>-</Text>
         </TouchableOpacity>
         <Text style={{ marginHorizontal: 10 }}>{quantity}</Text>
@@ -46,7 +65,7 @@ const ProductDetail = () => {
         </TouchableOpacity>
       </View>
       
-      <TouchableOpacity style={{ backgroundColor: "green", padding: 15, borderRadius: 5, alignItems: "center" }}>
+      <TouchableOpacity onPress={addToCart} style={{ backgroundColor: "green", padding: 15, borderRadius: 5, alignItems: "center" }}>
         <Text style={{ color: "white", fontSize: 18 }}>CHỌN MUA</Text>
       </TouchableOpacity>
     </View>
