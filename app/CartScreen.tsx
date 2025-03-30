@@ -103,7 +103,7 @@ export default function CartScreen() {
       {cartItems.length > 0 && (
         <View style={styles.footer}>
           <Text style={styles.totalPrice}>Tạm tính: {totalPrice.toLocaleString()}đ</Text>
-          <TouchableOpacity style={styles.checkoutButton}>
+          <TouchableOpacity style={styles.checkoutButton} onPress={()=>router.push("/Payment")}>
             <Text style={styles.checkoutText}>Tiến hành thanh toán</Text>
             <Ionicons name="arrow-forward" size={20} color="white" />
           </TouchableOpacity>
