@@ -29,7 +29,7 @@ export default function PaymentScreen() {
     }
 
     if (paymentMethod === "visa" || paymentMethod === "atm") {
-      router.push("/payment-card");
+      router.push("/PaymentCardScreen");
     } else {
       Alert.alert("Thanh toán thành công", "Đơn hàng của bạn đã được xác nhận!");
     }
